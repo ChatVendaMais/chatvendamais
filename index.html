@@ -1,390 +1,248 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatVendaMais – R$25</title>
-
-  <!-- Fonts -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ChatVendaMais – Mentoria R$25</title>
+  <meta name="description" content="Mentoria completa + mockup 1 mês — ChatVendaMais. Pagamento rápido via Mercado Pago." />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
-
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <!-- confetti (ok usar CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
 
   <style>
-    :root {--bg:#001a14;--neon:#00FF99;--blue:#00BFFF;}
-
-    body {
+    :root{
+      --bg1:#00120F; --bg2:#002D2A;
+      --neon:#00ff88; --accent:#00bfff;
+      --text:#E6FFF8; --muted:#bfeee6;
+      --maxwidth:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
       margin:0;
-      background:var(--bg);
-      color:white;
-      font-family:'Rajdhani',sans-serif;
+      font-family:"Rajdhani",sans-serif;
+      color:var(--text);
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
       overflow-x:hidden;
     }
 
-    /* FUNDO ANIMADO */
-    body::before {
-      content:"";
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:
-        radial-gradient(circle at center, rgba(0,255,150,0.15), rgba(0,0,0,0.9)),
-        linear-gradient(45deg, rgba(0,191,255,0.1), rgba(0,255,153,0.1));
-      animation:bgMove 18s linear infinite alternate;
-      z-index:-1;
-      opacity:0.35;
+    /* Page container */
+    .wrap{max-width:var(--maxwidth);margin:0 auto;padding:32px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;position:relative}
+
+    /* Background layers (parallax like) */
+    .bg-layer{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
+    .bg-gradient{position:absolute;inset:-10%;background:radial-gradient(circle at 20% 20%, rgba(0,255,140,0.06), transparent 12%), radial-gradient(circle at 80% 80%, rgba(0,180,255,0.05), transparent 14%);filter:blur(6px);transform:scale(1.08)}
+    .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,140,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,255,0.02) 1px, transparent 1px);background-size:220px 220px;opacity:0.55;mix-blend-mode:overlay}
+
+    /* Animated particles (lightweight) */
+    .particle{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--neon);opacity:0.25;filter:blur(.6px);animation:rise linear infinite}
+    @keyframes rise{from{transform:translateY(110vh)}to{transform:translateY(-30vh)}}
+
+    /* Logo + heading */
+    .logo-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .logo{width:320px;max-width:72%;border-radius:12px;box-shadow:0 12px 40px rgba(0,255,140,0.14);animation:logoFloat 6s ease-in-out infinite}
+    @keyframes logoFloat{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+    h1{font-family:"Orbitron",sans-serif;font-size:3.2rem;margin:0;text-shadow:0 0 18px rgba(0,255,140,0.18)}
+    p.lead{margin:0;color:var(--muted);font-size:1.05rem}
+
+    /* Robot SVG area (holographic) */
+    .robot-wrap{width:220px;margin:8px auto 0}
+    .robot-svg{width:100%;height:auto;display:block}
+
+    /* CTA */
+    .cta{margin-top:18px}
+    .btn{
+      appearance:none;border:0;cursor:pointer;padding:16px 48px;border-radius:999px;font-weight:700;
+      background:linear-gradient(90deg,var(--accent),var(--neon));
+      color:#001;box-shadow:0 12px 40px rgba(0,255,140,0.18);font-size:1.2rem;transition:transform .18s ease, box-shadow .18s;
     }
+    .btn:active{transform:translateY(2px)}
+    .btn:focus{outline:3px solid rgba(0,255,140,0.18)}
 
-    @keyframes bgMove {
-      0% { transform:scale(1) translateY(0); }
-      100% { transform:scale(1.15) translateY(-40px); }
-    }
+    /* Result / copy areas */
+    .result{display:none;width:100%;max-width:820px;margin-top:18px}
+    .card{background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,140,0.12);padding:18px;border-radius:12px;color:var(--muted)}
+    .copybtn{float:right;background:var(--neon);border:none;padding:8px 14px;border-radius:10px;font-weight:700;cursor:pointer}
 
-    /* GRID CYBERPUNK */
-    body::after {
-      content:"";
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background-image:
-        linear-gradient(0deg, transparent 24%, rgba(0,255,153,.05) 25%, rgba(0,255,153,.05) 26%, transparent 27%, transparent 74%, rgba(0,255,153,.05) 75%, rgba(0,255,153,.05) 76%, transparent 77%, transparent),
-        linear-gradient(90deg, transparent 24%, rgba(0,255,153,.05) 25%, rgba(0,255,153,.05) 26%, transparent 27%, transparent 74%, rgba(0,255,153,.05) 75%, rgba(0,255,153,.05) 76%, transparent 77%, transparent);
-      background-size:50px 50px;
-      z-index:-1;
-      opacity:0.3;
-    }
-
-    .glow { text-shadow:0 0 20px var(--neon),0 0 40px var(--neon); }
-
-    /* PRODUTO CENTRAL */
-    .container {
-      max-width:900px;
-      margin:0 auto;
-      padding:20px;
-      text-align:center;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    /* BOTÃO */
-    .btn {
-      background:linear-gradient(90deg, var(--blue), var(--neon));
-      padding:22px 60px;
-      border-radius:50px;
-      font-size:1.7rem;
-      margin:40px auto;
-      display:inline-block;
-      box-shadow:0 0 35px rgba(0,255,150,0.8);
-      cursor:pointer;
-      transition:0.3s;
-      text-decoration:none;
-      color:white;
-      font-weight:bold;
-    }
-    .btn:hover { transform:scale(1.12); }
-
-    /* ROBÔ HOLOGRÁFICO SVG */
-    .robot-container {
-      width:100%;
-      display:flex;
-      justify-content:center;
-      margin:40px 0;
-      animation:fadeIn 1.5s ease;
-    }
-
-    .robot-svg {
-      width:280px;
-      max-width:90%;
-      filter:drop-shadow(0 0 20px var(--neon));
-      animation:robotFloat 6s ease-in-out infinite;
-    }
-
-    @keyframes robotFloat {
-      0% { transform:translateY(0) rotate(0deg); }
-      50% { transform:translateY(-12px) rotate(2deg); }
-      100% { transform:translateY(0) rotate(0deg); }
-    }
-
-    /* ANIMAÇÃO DO ROBÔ */
-    .robot-glow {
-      animation:glowPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { opacity:0.6; }
-      50% { opacity:1; }
-    }
-
-    .robot-scan {
-      animation:scanLine 3s linear infinite;
-    }
-
-    @keyframes scanLine {
-      0% { transform:translateY(-50px); opacity:0; }
-      50% { opacity:1; }
-      100% { transform:translateY(50px); opacity:0; }
-    }
-
-    /* COPIAR */
-    .copybox {
-      background:rgba(0,0,0,0.65);
-      border:3px solid var(--neon);
-      padding:30px;
-      border-radius:15px;
-      margin:30px auto;
-      font-size:1.4rem;
-      position:relative;
-      white-space:pre-wrap;
-      max-width:600px;
-    }
-
-    .copybtn {
-      position:absolute;
-      top:12px;
-      right:12px;
-      background:var(--neon);
-      color:black;
-      padding:12px 24px;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:bold;
-      transition:0.3s;
-    }
-
-    .copybtn:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 15px var(--neon);
-    }
-
-    /* RESULTADO */
-    .success {
-      display:none;
-      animation:fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(-10px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-
-    .upsell-box {
-      margin:60px auto;
-      padding:50px;
-      background:rgba(255,0,100,0.2);
-      border:5px solid #FF0066;
-      border-radius:30px;
-      max-width:700px;
+    /* small screens */
+    @media(max-width:640px){
+      h1{font-size:2rem}
+      .logo{width:220px}
+      .robot-wrap{width:160px}
+      .btn{padding:12px 28px;font-size:1rem}
     }
   </style>
 </head>
-
 <body>
-
-<!-- ROBÔ HOLOGRÁFICO -->
-<div class="robot-container">
-  <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <!-- Aura holográfica -->
-    <circle cx="100" cy="100" r="90" fill="none" stroke="#00FF99" stroke-width="2" opacity="0.3" class="robot-glow">
-      <animate attributeName="r" values="85;95;85" dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="100" cy="100" r="75" fill="none" stroke="#00BFFF" stroke-width="1" opacity="0.2" class="robot-glow">
-      <animate attributeName="r" values="70;80;70" dur="2.5s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Cabeça do robô -->
-    <rect x="60" y="50" width="80" height="70" rx="10" fill="#001a14" stroke="#00FF99" stroke-width="3"/>
-    <circle cx="80" cy="75" r="12" fill="#00FF99" opacity="0.8">
-      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="120" cy="75" r="12" fill="#00BFFF" opacity="0.8">
-      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Antena -->
-    <line x1="100" y1="50" x2="100" x2="30" stroke="#00FF99" stroke-width="2"/>
-    <circle cx="100" cy="30" r="5" fill="#00FF99">
-      <animate attributeName="r" values="4;7;4" dur="1s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Boca/display -->
-    <rect x="70" y="95" width="60" height="15" rx="5" fill="none" stroke="#00FF99" stroke-width="2"/>
-    <line x1="75" y1="102" x2="125" y2="102" stroke="#00FF99" stroke-width="1" class="robot-scan"/>
-    
-    <!-- Corpo -->
-    <rect x="70" y="125" width="60" height="50" rx="8" fill="#001a14" stroke="#00BFFF" stroke-width="3"/>
-    <circle cx="100" cy="150" r="8" fill="#00FF99" opacity="0.6">
-      <animate attributeName="fill" values="#00FF99;#00BFFF;#00FF99" dur="2s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Braços -->
-    <rect x="40" y="130" width="25" height="40" rx="5" fill="#001a14" stroke="#00FF99" stroke-width="2"/>
-    <rect x="135" y="130" width="25" height="40" rx="5" fill="#001a14" stroke="#00FF99" stroke-width="2"/>
-    
-    <!-- Linhas holográficas -->
-    <line x1="20" y1="100" x2="180" y2="100" stroke="#00FF99" stroke-width="1" opacity="0.3" class="robot-scan"/>
-  </svg>
-</div>
-
-<!-- PAYWALL -->
-<div class="container" id="paywall">
-
-  <h1 class="glow">CHATVENDA<span style="color:var(--neon)">MAIS</span></h1>
-
-  <p style="font-size:2rem;margin:50px 0;">
-    Mentoria completa + mockup de 1 mês<br>
-    por apenas <b>R$25,00</b> (uso único)
-  </p>
-
-  <div class="btn" onclick="pagar()">PAGAR R$25 E LIBERAR AGORA</div>
-</div>
-
-<!-- RESULTADO -->
-<div class="container success" id="resultado">
-
-  <h1 class="glow">SUA MENTORIA ESTÁ PRONTA 🔥</h1>
-
-  <div id="plano" class="copybox">
-📊 PLANO PERSONALIZADO CHATVENDAMAIS
-
-✅ Módulo 1: Configuração de IA para Vendas
-✅ Módulo 2: Automação de Atendimento
-✅ Módulo 3: Scripts de Conversão
-✅ Módulo 4: Métricas e Otimização
-
-🎯 Acesso vitalício ao material
-🚀 Suporte exclusivo por 30 dias
+  <!-- Background -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <!-- particles inserted by JS -->
   </div>
-  <button class="copybtn" onclick="copiar('plano')">COPIAR PLANO</button>
 
-  <p style="font-size:1.6rem;margin:40px 0;">
-    <b>Brinde exclusivo:</b> Mockup interativo cyberpunk – válido por 30 dias
-  </p>
+  <main class="wrap" role="main" aria-labelledby="pageTitle">
+    <!-- logo (upload logo.png in repo root) -->
+    <div class="logo-wrap" aria-hidden="false">
+      <img src="logo.png" alt="ChatVendaMais logo" class="logo" id="siteLogo">
+      <h1 id="pageTitle">CHATVENDA<span style="color:var(--neon)">MAIS</span></h1>
+      <p class="lead">Mentoria completa + mockup interativo por 1 mês — uso único R$25</p>
+    </div>
 
-  <div id="mockup" class="copybox">https://www.figma.com/proto/abc123-chatvendamais-mockup</div>
-  <button class="copybtn" onclick="copiar('mockup')">COPIAR LINK</button>
+    <!-- holographic robot (SVG embedded and accessible) -->
+    <figure class="robot-wrap" aria-hidden="false">
+      <svg class="robot-svg" viewBox="0 0 120 140" role="img" aria-label="Robô holográfico">
+        <!-- body -->
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00ffd0"/><stop offset="1" stop-color="#00bfff"/></linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="22" y="32" rx="10" ry="10" width="76" height="56" fill="none" stroke="url(#g1)" stroke-width="2.6" filter="url(#glow)"/>
+        <circle cx="46" cy="58" r="6.6" fill="url(#g1)">
+          <animate attributeName="cy" values="58;55;58" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="74" cy="58" r="6.6" fill="url(#g1)">
+          <animate attributeName="cy" values="58;61;58" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
+        <!-- head -->
+        <rect x="36" y="10" rx="8" ry="8" width="48" height="28" stroke="url(#g1)" stroke-width="2.4" fill="rgba(0,0,0,0.08)" filter="url(#glow)"/>
+        <!-- base arc -->
+        <path d="M30 94 q30 24 60 0" stroke="rgba(0,255,140,0.06)" stroke-width="3" fill="none"/>
+        <!-- scanning line -->
+        <rect x="26" y="44" width="68" height="2" fill="rgba(0,255,140,0.05)">
+          <animate attributeName="x" values="26;50;26" dur="3.8s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+      <figcaption style="display:none">Robô holográfico ChatVendaMais</figcaption>
+    </figure>
 
-  <div class="upsell-box">
-    <h2 class="glow" style="color:#FF0066">ACESSO IMEDIATO RECOMENDADO</h2>
-    <p style="font-size:1.6rem;">
-      Legacy Pro R$52 – Administração, Marketing e Growth com executivos da V4, Record, Porto Seguro
-    </p>
-    <a href="https://www.chatvendamais.com.br/desbloqueieseuimperio" target="_blank" class="btn">
-      COMPRAR LEGACY PRO R$52
-    </a>
-  </div>
-</div>
+    <!-- CTA -->
+    <div class="cta" role="region" aria-label="Área de pagamento">
+      <button class="btn" id="payBtn" onclick="pagar()">PAGAR R$25 E LIBERAR AGORA</button>
+    </div>
 
-<script>
-// NOTA DE SEGURANÇA: Este token NUNCA deve estar exposto no frontend!
-// Use um backend (Node.js, PHP, etc) para processar pagamentos
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynTjEkXqfBK8ckjnkRy-j4Oam31Plhi-VBde5yG6QEca3l8LWwBptuOMJ_4FwlkoDZ/exec";
+    <!-- result area -->
+    <section class="result" id="resultSection" aria-live="polite">
+      <div class="card" id="planCard">
+        <strong>Seu plano aparecerá aqui após confirmação do pagamento.</strong>
+        <p style="margin:.6rem 0" id="planText">—</p>
+        <button class="copybtn" onclick="copiarTexto('planText')">COPIAR</button>
+      </div>
 
-function pagar() {
-  const email = prompt("Seu melhor e-mail:")?.trim().toLowerCase();
-  
-  if (!email) {
-    alert("⚠️ Por favor, insira um e-mail válido!");
-    return;
+      <div class="card" style="margin-top:12px">
+        <strong>Brinde (mockup 30 dias)</strong>
+        <p id="mockupText">https://www.figma.com/proto/abc123-chatvendamais-mockup</p>
+        <button class="copybtn" onclick="copiarTexto('mockupText')">COPIAR</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  /* ===============================
+     INSTRUÇÕES (importante, leia)
+     - NÃO cole seu token no chat. Cole no arquivo index.html localmente.
+     - Substitua as duas variáveis abaixo com:
+         MP_ACCESS_TOKEN = "APP_USR-...."   (token de PRODUÇÃO do Mercado Pago)
+         WEBHOOK_URL = "https://script.google.com/macros/....?action=payment"
+     - Faça commit e abra: .../chatvendamais/?v=1
+     =============================== */
+
+  const MP_ACCESS_TOKEN = "APP_USR-COLE_SEU_TOKEN_AQUI"; // <-- substitua localmente
+  const WEBHOOK_URL = "COLE_AQUI_SEU_WEBHOOK_URL";      // <-- substitua localmente
+
+  // cria partículas leves (performáticas)
+  (function createParticles(){
+    const layer=document.querySelector('.bg-layer');
+    for(let i=0;i<30;i++){
+      const d=document.createElement('div');
+      d.className='particle';
+      d.style.left = Math.random()*100 + 'vw';
+      d.style.top = (80 + Math.random()*30) + 'vh';
+      d.style.width = d.style.height = (2 + Math.random()*5) + 'px';
+      d.style.opacity = 0.12 + Math.random()*0.4;
+      d.style.animationDuration = (10 + Math.random()*18) + 's';
+      d.style.animationDelay = (-Math.random()*18) + 's';
+      layer.appendChild(d);
+    }
+  })();
+
+  // helpers
+  function validarEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
-  
-  // Validação básica de email
-  if (!email.includes('@') || !email.includes('.')) {
-    alert("⚠️ E-mail inválido! Tente novamente.");
-    return;
+  function showResult(planText,mocked){
+    document.getElementById('planText').innerText = planText || 'Plano gerado automaticamente.';
+    document.getElementById('resultSection').style.display='block';
+  }
+  function copiarTexto(id){
+    const t = document.getElementById(id).innerText || '';
+    navigator.clipboard.writeText(t).then(()=>alert('Copiado!'), ()=>alert('Não foi possível copiar.'));
   }
 
-  // AVISO: Em produção, esta chamada deve ser feita pelo backend!
-  alert("🔄 Redirecionando para o pagamento...\n\n⚠️ ATENÇÃO DESENVOLVEDOR:\nEm produção, processe pagamentos pelo BACKEND para proteger suas credenciais!");
-  
-  // Simulação de pagamento aprovado (remova em produção)
-  setTimeout(() => {
-    localStorage.setItem("pago", "true");
-    localStorage.setItem("userEmail", email);
-    mostrarResultado();
-  }, 2000);
-  
-  /* CÓDIGO REAL PARA MERCADO PAGO (usar no backend):
-  
-  fetch("https://api.mercadopago.com/checkout/preferences", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "Authorization":"Bearer SEU_TOKEN_AQUI"
-    },
-    body:JSON.stringify({
-      items:[{
-        title:"ChatVendaMais – 1 Uso",
-        quantity:1,
-        currency_id:"BRL",
-        unit_price:25
-      }],
-      payer:{email:email},
-      external_reference:email,
-      back_urls:{
-        success:location.href + "?status=approved",
-        failure:location.href + "?status=failed",
-        pending:location.href + "?status=pending"
-      },
-      auto_return:"approved",
-      notification_url:SCRIPT_URL+"?action=payment"
-    })
-  })
-  .then(r => {
-    if (!r.ok) throw new Error('Erro ao processar pagamento');
-    return r.json();
-  })
-  .then(pref => {
-    location.href = pref.init_point;
-  })
-  .catch(err => {
-    alert("❌ Erro ao processar pagamento. Tente novamente!");
-    console.error(err);
-  });
-  */
-}
+  // pagar() com tratamento
+  async function pagar(){
+    // valida token substituído
+    if(!MP_ACCESS_TOKEN || MP_ACCESS_TOKEN.includes('COLE_SEU')){
+      alert('Token do Mercado Pago não configurado no arquivo. Abra index.html e cole o token em MP_ACCESS_TOKEN.');
+      return;
+    }
 
-function copiar(id) {
-  const element = document.getElementById(id);
-  const text = element.innerText || element.textContent;
-  
-  navigator.clipboard.writeText(text).then(() => {
-    alert("✅ Copiado com sucesso!");
-  }).catch(err => {
-    alert("❌ Erro ao copiar. Tente selecionar manualmente.");
-    console.error(err);
-  });
-}
+    let email = prompt('Seu melhor e-mail (receberá a mentoria):');
+    if(!email) return;
+    email = email.trim().toLowerCase();
+    if(!validarEmail(email)){ alert('E-mail inválido.'); return; }
 
-function mostrarResultado() {
-  document.getElementById("paywall").style.display = "none";
-  document.getElementById("resultado").style.display = "block";
-  
-  // Confetti celebração
-  if (typeof confetti !== 'undefined') {
-    confetti({
-      particleCount: 400,
-      spread: 100,
-      origin: { y: 0.6 }
-    });
+    const btn = document.getElementById('payBtn');
+    btn.disabled = true;
+    btn.innerText = 'Conectando...';
+
+    try{
+      const resp = await fetch('https://api.mercadopago.com/checkout/preferences', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer '+MP_ACCESS_TOKEN
+        },
+        body: JSON.stringify({
+          items:[{ title:'ChatVendaMais – 1 Uso', quantity:1, currency_id:'BRL', unit_price:25 }],
+          payer:{ email },
+          external_reference: email,
+          back_urls:{ success: location.href, failure: location.href, pending: location.href },
+          auto_return: 'approved',
+          notification_url: WEBHOOK_URL
+        }),
+        keepalive:true
+      });
+
+      const j = await resp.json();
+      if(j && j.init_point){
+        // redireciona para checkout Mercado Pago
+        location.href = j.init_point;
+      } else {
+        console.error('MP response', j);
+        alert('Falha ao criar checkout. Veja console para detalhes.');
+        btn.disabled=false;
+        btn.innerText='PAGAR R$25 E LIBERAR AGORA';
+      }
+    } catch(err){
+      console.error(err);
+      alert('Erro ao conectar com Mercado Pago. Ver console.');
+      btn.disabled=false;
+      btn.innerText='PAGAR R$25 E LIBERAR AGORA';
+    }
   }
-}
 
-// Verificar status do pagamento
-const urlParams = new URLSearchParams(window.location.search);
-const paymentStatus = urlParams.get('status');
-
-if (paymentStatus === 'approved' || localStorage.getItem("pago")) {
-  mostrarResultado();
-}
-</script>
-
+  // Se URL conter ?approved, mostra área resultado (caso webhook não processou)
+  (function onLoadCheck(){
+    if(location.search.includes('approved') || localStorage.getItem('pago')==='true'){
+      // exemplo de conteúdo gerado (o webhook real deve completar o conteúdo via Apps Script)
+      showResult('Parabéns! Mentoria liberada. Verifique seu e-mail com instruções.', true);
+      confetti && confetti({particleCount:300,spread:100,origin:{y:0.6}}); // confetti se disponível
+      localStorage.setItem('pago','true');
+    }
+  })();
+  </script>
 </body>
 </html>
