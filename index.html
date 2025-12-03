@@ -1,390 +1,151 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatVendaMais – R$25</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatVendaMais – R$25</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+/* ----------- VARIÁVEIS ----------- */
+:root {
+  --neon: #00ff88;
+  --blue: #00bfff;
+  --dark: #001a1a;
+}
 
-  <style>
-    :root {--bg:#001a14;--neon:#00FF99;--blue:#00BFFF;}
+/* ----------- BASE ----------- */
+body {
+  margin: 0;
+  background: radial-gradient(circle at center, #003030 0%, #000 90%);
+  font-family: "Rajdhani", sans-serif;
+  color: white;
+  overflow-x: hidden;
+}
 
-    body {
-      margin:0;
-      background:var(--bg);
-      color:white;
-      font-family:'Rajdhani',sans-serif;
-      overflow-x:hidden;
-    }
+/* ----------- FUNDO HOLOGRÁFICO ----------- */
+.bg {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(0,255,140,0.15), transparent 40%),
+              radial-gradient(circle at 80% 70%, rgba(0,200,255,0.12), transparent 40%);
+  z-index: -2;
+}
 
-    /* FUNDO ANIMADO */
-    body::before {
-      content:"";
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:
-        radial-gradient(circle at center, rgba(0,255,150,0.15), rgba(0,0,0,0.9)),
-        linear-gradient(45deg, rgba(0,191,255,0.1), rgba(0,255,153,0.1));
-      animation:bgMove 18s linear infinite alternate;
-      z-index:-1;
-      opacity:0.35;
-    }
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--neon);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: rise linear infinite;
+}
 
-    @keyframes bgMove {
-      0% { transform:scale(1) translateY(0); }
-      100% { transform:scale(1.15) translateY(-40px); }
-    }
+@keyframes rise {
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-20vh); }
+}
 
-    /* GRID CYBERPUNK */
-    body::after {
-      content:"";
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background-image:
-        linear-gradient(0deg, transparent 24%, rgba(0,255,153,.05) 25%, rgba(0,255,153,.05) 26%, transparent 27%, transparent 74%, rgba(0,255,153,.05) 75%, rgba(0,255,153,.05) 76%, transparent 77%, transparent),
-        linear-gradient(90deg, transparent 24%, rgba(0,255,153,.05) 25%, rgba(0,255,153,.05) 26%, transparent 27%, transparent 74%, rgba(0,255,153,.05) 75%, rgba(0,255,153,.05) 76%, transparent 77%, transparent);
-      background-size:50px 50px;
-      z-index:-1;
-      opacity:0.3;
-    }
+/* ----------- LOGO ----------- */
+.logo-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
 
-    .glow { text-shadow:0 0 20px var(--neon),0 0 40px var(--neon); }
+.logo {
+  width: 260px;
+  max-width: 90%;
+  filter: drop-shadow(0 0 22px var(--neon));
+  animation: float 5s ease-in-out infinite;
+}
 
-    /* PRODUTO CENTRAL */
-    .container {
-      max-width:900px;
-      margin:0 auto;
-      padding:20px;
-      text-align:center;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0); }
+}
 
-    /* BOTÃO */
-    .btn {
-      background:linear-gradient(90deg, var(--blue), var(--neon));
-      padding:22px 60px;
-      border-radius:50px;
-      font-size:1.7rem;
-      margin:40px auto;
-      display:inline-block;
-      box-shadow:0 0 35px rgba(0,255,150,0.8);
-      cursor:pointer;
-      transition:0.3s;
-      text-decoration:none;
-      color:white;
-      font-weight:bold;
-    }
-    .btn:hover { transform:scale(1.12); }
+/* ----------- ROBÔ HOLOGRÁFICO ----------- */
+.robot {
+  width: 180px;
+  margin: 20px auto;
+  display: block;
+  filter: drop-shadow(0 0 18px var(--neon));
+  animation: float 4s ease-in-out infinite;
+}
 
-    /* ROBÔ HOLOGRÁFICO SVG */
-    .robot-container {
-      width:100%;
-      display:flex;
-      justify-content:center;
-      margin:40px 0;
-      animation:fadeIn 1.5s ease;
-    }
+/* ----------- TÍTULOS ----------- */
+h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 3rem;
+  text-align: center;
+  margin: 20px 0;
+  text-shadow: 0 0 18px var(--neon);
+}
 
-    .robot-svg {
-      width:280px;
-      max-width:90%;
-      filter:drop-shadow(0 0 20px var(--neon));
-      animation:robotFloat 6s ease-in-out infinite;
-    }
+/* ----------- BOTÃO ----------- */
+.btn {
+  background: linear-gradient(90deg, var(--blue), var(--neon));
+  padding: 18px 50px;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  color: black;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 30px;
+  box-shadow: 0 0 25px rgba(0,255,140,0.5);
+}
+.btn:hover {
+  transform: scale(1.05);
+}
 
-    @keyframes robotFloat {
-      0% { transform:translateY(0) rotate(0deg); }
-      50% { transform:translateY(-12px) rotate(2deg); }
-      100% { transform:translateY(0) rotate(0deg); }
-    }
+/* ----------- RESULTADO DEPOIS DO PAGAMENTO ----------- */
+.success {
+  display: none;
+  background: rgba(0,255,140,0.1);
+  padding: 40px;
+  border-radius: 20px;
+  border: 2px solid var(--neon);
+  margin: 30px;
+}
 
-    /* ANIMAÇÃO DO ROBÔ */
-    .robot-glow {
-      animation:glowPulse 2s ease-in-out infinite;
-    }
+/* ----------- COPY BOX ----------- */
+.copybox {
+  border: 2px solid var(--neon);
+  padding: 20px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  margin: 20px auto;
+  position: relative;
+  max-width: 800px;
+}
 
-    @keyframes glowPulse {
-      0%, 100% { opacity:0.6; }
-      50% { opacity:1; }
-    }
+.copybtn {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  padding: 8px 14px;
+  background: var(--neon);
+  color: black;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-    .robot-scan {
-      animation:scanLine 3s linear infinite;
-    }
-
-    @keyframes scanLine {
-      0% { transform:translateY(-50px); opacity:0; }
-      50% { opacity:1; }
-      100% { transform:translateY(50px); opacity:0; }
-    }
-
-    /* COPIAR */
-    .copybox {
-      background:rgba(0,0,0,0.65);
-      border:3px solid var(--neon);
-      padding:30px;
-      border-radius:15px;
-      margin:30px auto;
-      font-size:1.4rem;
-      position:relative;
-      white-space:pre-wrap;
-      max-width:600px;
-    }
-
-    .copybtn {
-      position:absolute;
-      top:12px;
-      right:12px;
-      background:var(--neon);
-      color:black;
-      padding:12px 24px;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:bold;
-      transition:0.3s;
-    }
-
-    .copybtn:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 15px var(--neon);
-    }
-
-    /* RESULTADO */
-    .success {
-      display:none;
-      animation:fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(-10px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-
-    .upsell-box {
-      margin:60px auto;
-      padding:50px;
-      background:rgba(255,0,100,0.2);
-      border:5px solid #FF0066;
-      border-radius:30px;
-      max-width:700px;
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-<!-- ROBÔ HOLOGRÁFICO -->
-<div class="robot-container">
-  <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <!-- Aura holográfica -->
-    <circle cx="100" cy="100" r="90" fill="none" stroke="#00FF99" stroke-width="2" opacity="0.3" class="robot-glow">
-      <animate attributeName="r" values="85;95;85" dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="100" cy="100" r="75" fill="none" stroke="#00BFFF" stroke-width="1" opacity="0.2" class="robot-glow">
-      <animate attributeName="r" values="70;80;70" dur="2.5s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Cabeça do robô -->
-    <rect x="60" y="50" width="80" height="70" rx="10" fill="#001a14" stroke="#00FF99" stroke-width="3"/>
-    <circle cx="80" cy="75" r="12" fill="#00FF99" opacity="0.8">
-      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="120" cy="75" r="12" fill="#00BFFF" opacity="0.8">
-      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Antena -->
-    <line x1="100" y1="50" x2="100" x2="30" stroke="#00FF99" stroke-width="2"/>
-    <circle cx="100" cy="30" r="5" fill="#00FF99">
-      <animate attributeName="r" values="4;7;4" dur="1s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Boca/display -->
-    <rect x="70" y="95" width="60" height="15" rx="5" fill="none" stroke="#00FF99" stroke-width="2"/>
-    <line x1="75" y1="102" x2="125" y2="102" stroke="#00FF99" stroke-width="1" class="robot-scan"/>
-    
-    <!-- Corpo -->
-    <rect x="70" y="125" width="60" height="50" rx="8" fill="#001a14" stroke="#00BFFF" stroke-width="3"/>
-    <circle cx="100" cy="150" r="8" fill="#00FF99" opacity="0.6">
-      <animate attributeName="fill" values="#00FF99;#00BFFF;#00FF99" dur="2s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Braços -->
-    <rect x="40" y="130" width="25" height="40" rx="5" fill="#001a14" stroke="#00FF99" stroke-width="2"/>
-    <rect x="135" y="130" width="25" height="40" rx="5" fill="#001a14" stroke="#00FF99" stroke-width="2"/>
-    
-    <!-- Linhas holográficas -->
-    <line x1="20" y1="100" x2="180" y2="100" stroke="#00FF99" stroke-width="1" opacity="0.3" class="robot-scan"/>
-  </svg>
+<div class="bg" id="bg"></div>
+
+<div class="logo-box">
+  <img src="logo.png" alt="Logo ChatVendaMais" class="logo">
 </div>
 
-<!-- PAYWALL -->
-<div class="container" id="paywall">
-
-  <h1 class="glow">CHATVENDA<span style="color:var(--neon)">MAIS</span></h1>
-
-  <p style="font-size:2rem;margin:50px 0;">
-    Mentoria completa + mockup de 1 mês<br>
-    por apenas <b>R$25,00</b> (uso único)
-  </p>
-
-  <div class="btn" onclick="pagar()">PAGAR R$25 E LIBERAR AGORA</div>
-</div>
-
-<!-- RESULTADO -->
-<div class="container success" id="resultado">
-
-  <h1 class="glow">SUA MENTORIA ESTÁ PRONTA 🔥</h1>
-
-  <div id="plano" class="copybox">
-📊 PLANO PERSONALIZADO CHATVENDAMAIS
-
-✅ Módulo 1: Configuração de IA para Vendas
-✅ Módulo 2: Automação de Atendimento
-✅ Módulo 3: Scripts de Conversão
-✅ Módulo 4: Métricas e Otimização
-
-🎯 Acesso vitalício ao material
-🚀 Suporte exclusivo por 30 dias
-  </div>
-  <button class="copybtn" onclick="copiar('plano')">COPIAR PLANO</button>
-
-  <p style="font-size:1.6rem;margin:40px 0;">
-    <b>Brinde exclusivo:</b> Mockup interativo cyberpunk – válido por 30 dias
-  </p>
-
-  <div id="mockup" class="copybox">https://www.figma.com/proto/abc123-chatvendamais-mockup</div>
-  <button class="copybtn" onclick="copiar('mockup')">COPIAR LINK</button>
-
-  <div class="upsell-box">
-    <h2 class="glow" style="color:#FF0066">ACESSO IMEDIATO RECOMENDADO</h2>
-    <p style="font-size:1.6rem;">
-      Legacy Pro R$52 – Administração, Marketing e Growth com executivos da V4, Record, Porto Seguro
-    </p>
-    <a href="https://www.chatvendamais.com.br/desbloqueieseuimperio" target="_blank" class="btn">
-      COMPRAR LEGACY PRO R$52
-    </a>
-  </div>
-</div>
-
-<script>
-// NOTA DE SEGURANÇA: Este token NUNCA deve estar exposto no frontend!
-// Use um backend (Node.js, PHP, etc) para processar pagamentos
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynTjEkXqfBK8ckjnkRy-j4Oam31Plhi-VBde5yG6QEca3l8LWwBptuOMJ_4FwlkoDZ/exec";
-
-function pagar() {
-  const email = prompt("Seu melhor e-mail:")?.trim().toLowerCase();
-  
-  if (!email) {
-    alert("⚠️ Por favor, insira um e-mail válido!");
-    return;
-  }
-  
-  // Validação básica de email
-  if (!email.includes('@') || !email.includes('.')) {
-    alert("⚠️ E-mail inválido! Tente novamente.");
-    return;
-  }
-
-  // AVISO: Em produção, esta chamada deve ser feita pelo backend!
-  alert("🔄 Redirecionando para o pagamento...\n\n⚠️ ATENÇÃO DESENVOLVEDOR:\nEm produção, processe pagamentos pelo BACKEND para proteger suas credenciais!");
-  
-  // Simulação de pagamento aprovado (remova em produção)
-  setTimeout(() => {
-    localStorage.setItem("pago", "true");
-    localStorage.setItem("userEmail", email);
-    mostrarResultado();
-  }, 2000);
-  
-  /* CÓDIGO REAL PARA MERCADO PAGO (usar no backend):
-  
-  fetch("https://api.mercadopago.com/checkout/preferences", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "Authorization":"Bearer SEU_TOKEN_AQUI"
-    },
-    body:JSON.stringify({
-      items:[{
-        title:"ChatVendaMais – 1 Uso",
-        quantity:1,
-        currency_id:"BRL",
-        unit_price:25
-      }],
-      payer:{email:email},
-      external_reference:email,
-      back_urls:{
-        success:location.href + "?status=approved",
-        failure:location.href + "?status=failed",
-        pending:location.href + "?status=pending"
-      },
-      auto_return:"approved",
-      notification_url:SCRIPT_URL+"?action=payment"
-    })
-  })
-  .then(r => {
-    if (!r.ok) throw new Error('Erro ao processar pagamento');
-    return r.json();
-  })
-  .then(pref => {
-    location.href = pref.init_point;
-  })
-  .catch(err => {
-    alert("❌ Erro ao processar pagamento. Tente novamente!");
-    console.error(err);
-  });
-  */
-}
-
-function copiar(id) {
-  const element = document.getElementById(id);
-  const text = element.innerText || element.textContent;
-  
-  navigator.clipboard.writeText(text).then(() => {
-    alert("✅ Copiado com sucesso!");
-  }).catch(err => {
-    alert("❌ Erro ao copiar. Tente selecionar manualmente.");
-    console.error(err);
-  });
-}
-
-function mostrarResultado() {
-  document.getElementById("paywall").style.display = "none";
-  document.getElementById("resultado").style.display = "block";
-  
-  // Confetti celebração
-  if (typeof confetti !== 'undefined') {
-    confetti({
-      particleCount: 400,
-      spread: 100,
-      origin: { y: 0.6 }
-    });
-  }
-}
-
-// Verificar status do pagamento
-const urlParams = new URLSearchParams(window.location.search);
-const paymentStatus = urlParams.get('status');
-
-if (paymentStatus === 'approved' || localStorage.getItem("pago")) {
-  mostrarResultado();
-}
-</script>
-
-</body>
-</html>
+<!-- ROBÔ HOLOGRÁFICO E
