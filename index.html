@@ -12,26 +12,78 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
   <style>
-    :root {--bg:#000;--neon:#00FF41;--blue:#00BFFF;}
+    :root {--neon:#00FF41;--blue:#00BFFF;}
 
     body {
       margin:0;
-      background:var(--bg);
+      background:#000;
       color:white;
       font-family:'Rajdhani',sans-serif;
       overflow-x:hidden;
     }
 
+    /* FUNDO ANIMADO PREMIUM */
+    .animated-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; 
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at center, #001a1a 0%, #000 100%);
+      overflow: hidden;
+    }
+
+    .animated-bg::before,
+    .animated-bg::after {
+      content:"";
+      position:absolute;
+      width:200%;
+      height:200%;
+      top:-50%;
+      left:-50%;
+      background:
+        radial-gradient(circle, rgba(0,255,150,0.15) 0%, transparent 60%),
+        radial-gradient(circle, rgba(0,150,255,0.12) 0%, transparent 70%),
+        radial-gradient(circle, rgba(0,255,100,0.10) 0%, transparent 80%);
+      animation: float 22s linear infinite;
+      filter: blur(80px);
+    }
+
+    .animated-bg::after {
+      animation-duration: 35s;
+      opacity: .7;
+    }
+
+    @keyframes float {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    /* HEADER COM LOGO */
+    .header {
+      text-align:center;
+      margin-top:40px;
+      animation: fadeIn 2s ease;
+    }
+
+    .header img {
+      width:180px;
+      filter: drop-shadow(0 0 12px #00ff41);
+    }
+
+    /* TITULO */
     .glow {
       text-shadow:0 0 20px var(--neon),0 0 40px var(--neon);
     }
 
+    /* CONTAINERS */
     .container {
       max-width:900px;
       margin:0 auto;
       padding:20px;
       text-align:center;
-      min-height:100vh;
+      min-height:70vh;
       display:flex;
       flex-direction:column;
       justify-content:center;
@@ -40,32 +92,18 @@
     /* BOTÃO */
     .btn {
       background:linear-gradient(90deg,var(--blue),var(--neon));
-      padding:22px 60px;
+      padding:20px 55px;
       border-radius:50px;
-      font-size:1.8rem;
-      margin:40px auto;
+      font-size:1.7rem;
+      margin:35px auto;
       display:inline-block;
       box-shadow:0 0 50px rgba(0,255,65,0.8);
       cursor:pointer;
       transition:0.3s;
     }
-    .btn:hover {
-      transform:scale(1.1);
-    }
+    .btn:hover { transform:scale(1.1); }
 
-    /* LOGO */
-    .logo-box {
-      text-align:center;
-      margin-top:30px;
-      animation:fadeIn 1.5s ease;
-    }
-    .logo {
-      width:200px;
-      max-width:80%;
-      filter:drop-shadow(0 0 12px #00ff41);
-    }
-
-    /* COPIAR */
+    /* COPY BOX */
     .copybox {
       background:rgba(0,0,0,0.7);
       border:3px solid var(--neon);
@@ -109,16 +147,19 @@
 
 <body>
 
-<!-- LOGO -->
-<div class="logo-box">
-  <img src="logo.png" alt="ChatVendaMais" class="logo">
+<!-- FUNDO ANIMADO -->
+<div class="animated-bg"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <img src="logo.png" alt="ChatVendaMais Logo">
 </div>
 
 <!-- PAYWALL -->
 <div class="container" id="paywall">
   <h1 class="glow">CHATVENDA<span style="color:var(--neon)">MAIS</span></h1>
 
-  <p style="font-size:2rem;margin:50px 0;">
+  <p style="font-size:2rem;margin:40px 0;">
     Mentoria completa + mockup de 1 mês<br>
     por apenas <b>R$25,00</b> (uso único)
   </p>
@@ -133,9 +174,7 @@
   <div id="plano" class="copybox"><pre></pre></div>
   <button class="copybtn" onclick="copiar('plano')">COPIAR PLANO</button>
 
-  <p style="font-size:1.6rem;margin:40px 0;">
-    <b>Brinde exclusivo:</b> Mockup interativo cyberpunk – válido por 30 dias
-  </p>
+  <p style="font-size:1.6rem;margin:40px 0;"><b>Brinde exclusivo:</b> Mockup interativo cyberpunk – válido por 30 dias</p>
 
   <div id="mockup" class="copybox">
     https://www.figma.com/proto/abc123-chatvendamais-mockup
@@ -155,7 +194,7 @@
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynTjEkXqfBK8ckjnkRy-j4Oam31Plhi-VBde5yG6QEca3l8LWwBptuOMJ_4FwlkoDZ/exec";
-const MP_ACCESS_TOKEN = "SEU_TOKEN_AQUI"; // Deixe o seu que já está no GitHub
+const MP_ACCESS_TOKEN = "SEU_TOKEN_AQUI"; // já está no GitHub
 
 function pagar() {
   const email = prompt("Seu melhor e-mail:")?.trim().toLowerCase();
@@ -168,12 +207,7 @@ function pagar() {
       "Authorization":"Bearer " + MP_ACCESS_TOKEN
     },
     body:JSON.stringify({
-      items:[{
-        title:"ChatVendaMais – 1 Uso",
-        quantity:1,
-        currency_id:"BRL",
-        unit_price:25
-      }],
+      items:[{ title:"ChatVendaMais – 1 Uso", quantity:1, currency_id:"BRL", unit_price:25 }],
       payer:{email:email},
       external_reference:email,
       back_urls:{success:location.href,failure:location.href,pending:location.href},
