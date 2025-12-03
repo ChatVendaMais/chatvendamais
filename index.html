@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChatVendaMais – R$25</title>
 
-  <!-- Fonts -->
+  <!-- FONTS -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 
-  <!-- Confetti -->
+  <!-- CONFETTI -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
   <style>
-    :root {--neon:#00FF41;--blue:#00BFFF;}
+    :root {
+      --green: #00FF88;
+      --blue: #00BFFF;
+      --dark: #001a1a;
+    }
 
     body {
       margin:0;
@@ -20,97 +24,113 @@
       color:white;
       font-family:'Rajdhani',sans-serif;
       overflow-x:hidden;
+      position:relative;
     }
 
-    /* FUNDO ANIMADO PREMIUM */
-    .animated-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; 
-      height: 100%;
-      z-index: -1;
-      background: radial-gradient(circle at center, #001a1a 0%, #000 100%);
-      overflow: hidden;
+    /* ========= FUNDO ANIMADO ========= */
+    #bg-animated {
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background:radial-gradient(circle at center, #003333, #000);
+      overflow:hidden;
     }
 
-    .animated-bg::before,
-    .animated-bg::after {
-      content:"";
+    /* partículas */
+    .particle {
       position:absolute;
-      width:200%;
-      height:200%;
-      top:-50%;
-      left:-50%;
-      background:
-        radial-gradient(circle, rgba(0,255,150,0.15) 0%, transparent 60%),
-        radial-gradient(circle, rgba(0,150,255,0.12) 0%, transparent 70%),
-        radial-gradient(circle, rgba(0,255,100,0.10) 0%, transparent 80%);
-      animation: float 22s linear infinite;
-      filter: blur(80px);
-    }
-
-    .animated-bg::after {
-      animation-duration: 35s;
-      opacity: .7;
+      width:4px;
+      height:4px;
+      background:var(--green);
+      border-radius:50%;
+      opacity:0.4;
+      animation:float 8s linear infinite;
+      filter:drop-shadow(0 0 6px var(--green));
     }
 
     @keyframes float {
-      0% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.1); }
-      100% { transform: rotate(360deg) scale(1); }
+      from { transform:translateY(100vh) translateX(0); }
+      to   { transform:translateY(-10vh) translateX(40px); }
     }
 
-    /* HEADER COM LOGO */
-    .header {
-      text-align:center;
-      margin-top:40px;
-      animation: fadeIn 2s ease;
+    /* luz dinâmica */
+    #light {
+      position:absolute;
+      width:100%;
+      height:100%;
+      background:radial-gradient(circle at center, rgba(0,255,150,0.25), transparent 60%);
+      animation:pulse 6s ease-in-out infinite;
     }
 
-    .header img {
-      width:180px;
-      filter: drop-shadow(0 0 12px #00ff41);
+    @keyframes pulse {
+      0% { opacity:0.3; transform:scale(1); }
+      50% { opacity:0.55; transform:scale(1.15); }
+      100% { opacity:0.3; transform:scale(1); }
     }
 
-    /* TITULO */
-    .glow {
-      text-shadow:0 0 20px var(--neon),0 0 40px var(--neon);
+    /* gradiente se movendo */
+    #gradient {
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg, rgba(0,255,150,0.15), rgba(0,150,255,0.15));
+      animation:move 12s linear infinite;
     }
 
-    /* CONTAINERS */
+    @keyframes move {
+      from { transform:translateX(-20%); }
+      to   { transform:translateX(20%); }
+    }
+
+    /* ========= LAYOUT ========= */
+
     .container {
       max-width:900px;
       margin:0 auto;
       padding:20px;
       text-align:center;
-      min-height:70vh;
+      min-height:100vh;
       display:flex;
       flex-direction:column;
       justify-content:center;
     }
 
-    /* BOTÃO */
+    .logo-box {
+      margin-top:20px;
+    }
+
+    .logo {
+      width:180px;
+      filter:drop-shadow(0 0 15px var(--green));
+      animation:fadeIn 2s ease;
+    }
+
+    h1 {
+      font-family:'Orbitron',sans-serif;
+      font-size:3.8rem;
+      margin-top:40px;
+      text-shadow:0 0 15px var(--green);
+    }
+
     .btn {
-      background:linear-gradient(90deg,var(--blue),var(--neon));
+      background:linear-gradient(90deg,var(--blue),var(--green));
       padding:20px 55px;
       border-radius:50px;
-      font-size:1.7rem;
-      margin:35px auto;
+      font-size:1.6rem;
+      margin:40px auto;
       display:inline-block;
-      box-shadow:0 0 50px rgba(0,255,65,0.8);
+      box-shadow:0 0 30px rgba(0,255,150,0.6);
       cursor:pointer;
       transition:0.3s;
     }
-    .btn:hover { transform:scale(1.1); }
+    .btn:hover { transform:scale(1.08); }
 
-    /* COPY BOX */
     .copybox {
       background:rgba(0,0,0,0.7);
-      border:3px solid var(--neon);
-      padding:30px;
+      border:2px solid var(--green);
+      padding:25px;
       border-radius:15px;
-      margin:30px;
-      font-size:1.4rem;
+      margin:25px;
+      font-size:1.3rem;
       white-space:pre-wrap;
       position:relative;
     }
@@ -119,47 +139,60 @@
       position:absolute;
       top:12px;
       right:12px;
-      background:var(--neon);
+      background:var(--green);
       color:black;
-      padding:12px 24px;
+      padding:10px 22px;
       border:none;
       border-radius:12px;
       font-weight:bold;
       cursor:pointer;
     }
 
-    /* RESULTADO */
     .success {
       display:none;
-      background:rgba(0,255,65,0.1);
-      padding:60px;
+      background:rgba(0,255,150,0.12);
+      padding:50px;
       border-radius:25px;
-      border:4px solid var(--neon);
+      border:3px solid var(--green);
       margin:20px;
     }
 
     @keyframes fadeIn {
-      from { opacity:0; transform:translateY(-10px); }
-      to { opacity:1; transform:translateY(0); }
+      from { opacity:0; transform:translateY(-15px); }
+      to   { opacity:1; transform:translateY(0); }
     }
   </style>
 </head>
 
 <body>
 
-<!-- FUNDO ANIMADO -->
-<div class="animated-bg"></div>
+<!-- ===== FUNDO ANIMADO ===== -->
+<div id="bg-animated">
+  <div id="gradient"></div>
+  <div id="light"></div>
+</div>
 
-<!-- HEADER -->
-<div class="header">
-  <img src="logo.png" alt="ChatVendaMais Logo">
+<script>
+  // gera partículas automaticamente
+  for (let i = 0; i < 40; i++) {
+    let p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random()*100+"vw";
+    p.style.animationDelay = (-Math.random()*8)+"s";
+    document.getElementById("bg-animated").appendChild(p);
+  }
+</script>
+
+<!-- LOGO -->
+<div class="logo-box">
+  <img src="logo.png" class="logo" alt="ChatVendaMais">
 </div>
 
 <!-- PAYWALL -->
 <div class="container" id="paywall">
-  <h1 class="glow">CHATVENDA<span style="color:var(--neon)">MAIS</span></h1>
+  <h1>CHATVENDA<span style="color:var(--green)">MAIS</span></h1>
 
-  <p style="font-size:2rem;margin:40px 0;">
+  <p style="font-size:1.6rem;margin-top:20px;">
     Mentoria completa + mockup de 1 mês<br>
     por apenas <b>R$25,00</b> (uso único)
   </p>
@@ -169,32 +202,27 @@
 
 <!-- RESULTADO -->
 <div class="container success" id="resultado">
-  <h1 class="glow">SUA MENTORIA ESTÁ PRONTA 🔥</h1>
+
+  <h1>SUA MENTORIA ESTÁ PRONTA 🔥</h1>
 
   <div id="plano" class="copybox"><pre></pre></div>
   <button class="copybtn" onclick="copiar('plano')">COPIAR PLANO</button>
 
-  <p style="font-size:1.6rem;margin:40px 0;"><b>Brinde exclusivo:</b> Mockup interativo cyberpunk – válido por 30 dias</p>
+  <p style="font-size:1.3rem;margin:40px 0;">
+    <b>Brinde exclusivo:</b> Mockup interativo cyberpunk – válido por 30 dias
+  </p>
 
   <div id="mockup" class="copybox">
     https://www.figma.com/proto/abc123-chatvendamais-mockup
   </div>
   <button class="copybtn" onclick="copiar('mockup')">COPIAR LINK</button>
 
-  <div style="margin:60px 0;padding:50px;background:rgba(255,0,100,0.2);border:5px solid #FF0066;border-radius:30px;">
-    <h2 class="glow" style="color:#FF0066">ACESSO IMEDIATO RECOMENDADO</h2>
-    <p style="font-size:1.6rem;">
-      Legacy Pro R$52 – Administração, Marketing e Growth com executivos da V4, Record, Porto Seguro
-    </p>
-    <a href="https://www.chatvendamais.com.br/desbloqueieseuimperio" target="_blank" class="btn">
-      COMPRAR LEGACY PRO R$52
-    </a>
-  </div>
 </div>
 
+<!-- SCRIPT -->
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynTjEkXqfBK8ckjnkRy-j4Oam31Plhi-VBde5yG6QEca3l8LWwBptuOMJ_4FwlkoDZ/exec";
-const MP_ACCESS_TOKEN = "SEU_TOKEN_AQUI"; // já está no GitHub
+const MP_ACCESS_TOKEN = "APP_USR-COLE-SEU-TOKEN-AQUI";  /* <-- TROQUE AQUI */
 
 function pagar() {
   const email = prompt("Seu melhor e-mail:")?.trim().toLowerCase();
@@ -208,9 +236,9 @@ function pagar() {
     },
     body:JSON.stringify({
       items:[{ title:"ChatVendaMais – 1 Uso", quantity:1, currency_id:"BRL", unit_price:25 }],
-      payer:{email:email},
+      payer:{email},
       external_reference:email,
-      back_urls:{success:location.href,failure:location.href,pending:location.href},
+      back_urls:{ success:location.href, failure:location.href, pending:location.href },
       auto_return:"approved",
       notification_url:SCRIPT_URL+"?action=payment"
     })
